@@ -1,12 +1,16 @@
 const telegramBot = require('node-telegram-bot-api');
+const configs = require("./configs.json");
+const dialogFlow =  require('./dialogFlow');
 
-const token = '1150510350:AAEiLF4zEar2LcCCSIjgHiKpRYr1_OU2RX8';
+const token = configs.Bot.key;
 
 const bot =  new telegramBot(token, { polling: true});
 
 
-bot.on('message', function (message) {
+bot.on('message', async function (message) {
   const chatID = message.chat.id;
   console.log(message.text);
-  bot.sendMessage(chatID, 'Teste de menssagem');
+  const ReceivedResponse = await dialogFlow.sendMessage(chatID.toString(), message.text)
+  
+  bot.sendMessage(chatID, ReceivedResponse.text);
 } )
